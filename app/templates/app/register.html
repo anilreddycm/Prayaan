@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register</title>
+  <link rel="stylesheet" href="{% static 'app/css/l_style.css' %}" />
+</head>
+<body style="background: url('https://res.cloudinary.com/dc9ofdtip/image/upload/v1763119201/Untitled_design_3_vn11tf.png') no-repeat center center/cover; min-height: 100vh;">
+  <div class="form-container">
+    <h2 style="color: #021814;font-size:32px;">Register</h2>
+    
+    {% if user.is_authenticated %}
+        <div style="padding: 15px; border-radius: 4px; margin-bottom: 15px; background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7;">
+            <strong>Already Registered</strong><br>
+            You are already logged in as <strong>{{ user.username }}</strong>. 
+            <br><br>
+            To create a new account, please <a href="{% url 'logout' %}" style="color: #0066cc; text-decoration: underline;">logout first</a>.
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="{% url 'index' %}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Back to Home</a>
+        </div>
+    {% else %}
+        {% if messages %}
+            <div style="margin-bottom: 15px;">
+                {% for message in messages %}
+                    <div style="padding: 12px; border-radius: 4px; margin-bottom: 10px; background-color: {% if message.tags %}#f8d7da{% else %}#d4edda{% endif %}; color: {% if message.tags %}#721c24{% else %}#155724{% endif %}; border: 1px solid {% if message.tags %}#f5c6cb{% else %}#c3e6cb{% endif %};">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="text" name="username" placeholder="Username" required />
+          <input type="email" name="email" placeholder="Email" required />
+          <input type="password" name="password1" placeholder="Password" required />
+          <input type="password" name="password2" placeholder="Confirm Password" required />
+          <button type="submit" style="background-color: #2a3c37;">Register</button>
+          <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        </form>
+    {% endif %}
+  </div>
+</body>
+</html>
+
+

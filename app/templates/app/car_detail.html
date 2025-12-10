@@ -1,0 +1,32 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            {% load car_extras %}
+            {% car_image_url car as image_url %}
+            <img src="{{ image_url }}" class="img-fluid" alt="{{ car.category }}">
+        </div>
+        <div class="col-md-6">
+            <h2>{{ car.category }}</h2>
+            <p><strong>Registration:</strong> {{ car.registration_number }}</p>
+            <p><strong>AC Type:</strong> {{ car.ac_type }}</p>
+            <p><strong>Fuel:</strong> {{ car.fuel_consumption }}</p>
+            <p><strong>Available Units:</strong> {{ car.total_cars }}</p>
+            <p><strong>Price:</strong> ₹{{ car.price }}</p>
+            <p><strong>Price/hour:</strong> ₹{{ car.price_per_hour }}</p>
+            <p><strong>Price/km:</strong> ₹{{ car.price_per_km }}</p>
+
+            <div class="mt-3">
+                <a href="{% url 'cars' %}" class="btn btn-secondary">Back to list</a>
+                {% if user.is_staff %}
+                    <a href="{% url 'car_update' car.id %}" class="btn btn-primary">Edit</a>
+                {% endif %}
+                <a href="{% url 'booking' %}?car_id={{ car.id }}" class="btn btn-success">Book</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

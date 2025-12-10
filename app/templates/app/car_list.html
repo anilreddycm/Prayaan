@@ -1,0 +1,39 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Cars</h2>
+        {% if user.is_staff %}
+            <a class="btn btn-primary" href="{% url 'car_create' %}">Add New Car</a>
+        {% endif %}
+    </div>
+
+    {% if cars %}
+        <div class="row">
+            {% for car in cars %}
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        {% load car_extras %}
+                        {% car_image_url car as image_url %}
+                        <img src="{{ image_url }}" class="card-img-top" alt="{{ car.category }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ car.category }}</h5>
+                            <p class="card-text">Registration: {{ car.registration_number }}</p>
+                            <p class="card-text">Price: ₹{{ car.price }}</p>
+                            <a href="{% url 'car_detail' car.id %}" class="btn btn-sm btn-outline-primary">Details</a>
+                            {% if user.is_staff %}
+                                <a href="{% url 'car_update' car.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                <a href="{% url 'car_delete' car.id %}" class="btn btn-sm btn-danger">Delete</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No cars available.</p>
+    {% endif %}
+</div>
+{% endblock %}

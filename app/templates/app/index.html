@@ -1,0 +1,19 @@
+{% extends "app/base.html" %}
+
+{% block title %}Home - PRAYAAN{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section (background image placed just below header) -->
+<section class="hero" style="background-color: #031b16; background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('https://res.cloudinary.com/dc9ofdtip/image/upload/v1763119201/Untitled_design_3_vn11tf.png'); background-size:contain; background-position:center; background-repeat:no-repeat; padding-top:60px;">
+    <div class="container">
+        <div class="hero-content" style="margin-top: 160px;">
+            <h1 style="margin-bottom: 40px;">Unlock The Road Ahead</h1>
+            <a href="{% url 'cars' %}" class="btn">Browse Cars</a>
+        </div>
+    </div>
+</section>
+
+
+
+{% endblock %}

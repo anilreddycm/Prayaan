@@ -1,0 +1,176 @@
+{% extends "app/base.html" %}
+
+{% block title %}Cars - PRAYAAN{% endblock %}
+
+{% block content %}
+<!-- Featured Cars -->
+<section id="cars" class="section" style="background-color: #bce3c2;">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our Garage</h2>
+            <p>Explore our collection of vehicles suitable for any occasion</p>
+        </div>
+        
+        <!-- Debug Info (remove in production) -->
+        {% if not cars %}
+            <div style="background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+                <strong>⚠️ No cars found in database</strong><br>
+                Please contact administrator or run: <code>python manage.py populate_sample_cars</code>
+            </div>
+        {% endif %}
+        
+        <div class="cars-grid">
+            {% for car in cars %}
+            <div class="car-card" style="background-color: #aadb95;">
+                <div class="car-img" style="margin: 10px;width:348px;border-radius: 10px;">
+                    {% load car_extras %}
+                    {% car_image_url car as image_url %}
+                    <img src="{{ image_url }}" alt="{{ car.category }} {{ car.ac_type }}" style="width: 100%; height: 250px; object-fit: cover;">
+                </div>
+                <div class="car-info">
+                    <h3>{{ car.category }} ({{ car.ac_type }})</h3>
+                    <div class="car-specs">
+                        <div class="car-spec"><i class="fas fa-car"></i> <strong>{{ car.category }}</strong></div>
+                        <div class="car-spec"><i class="fas fa-users"></i> 5 Seats</div>
+                        <div class="car-spec"><i class="fas fa-snowflake"></i> {{ car.ac_type }}</div>
+                        <div class="car-spec"><i class="fas fa-gas-pump"></i> {{ car.fuel_consumption|title }}</div>
+                        <div class="car-spec">
+                            {% if car.total_cars > 0 %}
+                                <i class="fas fa-check-circle" style="color: green;"></i> <span style="color: green;"><strong>{{ car.total_cars }} Available</strong></span>
+                            {% else %}
+                                <i class="fas fa-times-circle" style="color: red;"></i> <span style="color: red;"><strong>Not Available</strong></span>
+                            {% endif %}
+                        </div>
+                        <div class="car-spec">
+                            <i class="fas fa-rupee-sign"></i> ₹{{ car.price_per_hour }}/hour | ₹{{ car.price_per_km }}/km
+                        </div>
+                    </div>
+                    
+                    <div class="car-price">
+                        <div class="price" style="font-size: 24px; font-weight: bold; color: #28a745;">
+                            ₹{{ car.price }} <span style="font-size: 14px;">/day</span>
+                        </div>
+                        {% if car.total_cars > 0 %}
+                            <a href="{% url 'booking' %}?car_id={{ car.id }}" class="btn rent-btn" style="background-color: #007bff; color: white; padding: 10px 20px; border-radius: 4px; text-decoration: none; display: inline-block; margin-top: 10px;">
+                                <i class="fas fa-calendar-check"></i> Rent Now
+                            </a>
+                        {% else %}
+                            <button class="btn rent-btn" disabled style="background-color: #6c757d; color: white; padding: 10px 20px; border-radius: 4px; cursor: not-allowed; margin-top: 10px;">
+                                Not Available
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background-color: #f8f9fa; border-radius: 8px;">
+                <i class="fas fa-car" style="font-size: 48px; color: #6c757d; margin-bottom: 20px;"></i>
+                <h3>No cars available at the moment.</h3>
+                <p>Please check back later or <a href="{% url 'index' %}">return to home</a></p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<style>
+    .cars-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .car-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: none; /* remove surrounding shadow */
+        border-top: 4px solid #02643d; /* only top solid border */
+        transition: transform 0.3s ease;
+    }
+
+    .car-card:hover {
+        transform: translateY(-5px);
+        /* intentionally no shadow to keep only top border visible */
+    }
+    
+    .car-img {
+        width: 100%;
+        height: 250px;
+        background-color: #e9ecef;
+        overflow: hidden;
+    }
+    
+    .car-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .car-info {
+        padding: 20px;
+    }
+    
+    .car-info h3 {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    
+    .car-specs {
+        margin-bottom: 20px;
+        border-top: 1px solid #e9ecef;
+        border-bottom: 1px solid #e9ecef;
+        padding: 15px 0;
+    }
+    
+    .car-spec {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        color: #555;
+        font-size: 14px;
+    }
+    
+    .car-spec i {
+        margin-right: 10px;
+        width: 20px;
+        color: #007bff;
+    }
+    
+    .car-price {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .price {
+        font-size: 24px;
+        font-weight: bold;
+        color: #28a745;
+        margin-bottom: 10px;
+    }
+    
+    .btn.rent-btn {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-block;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    .btn.rent-btn:hover:not(:disabled) {
+        background-color: #0056b3;
+    }
+    
+    .btn.rent-btn:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+    }
+</style>
+{% endblock %}
